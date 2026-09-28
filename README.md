@@ -9,6 +9,9 @@ REST 服务，上层包一层 MCP Server，把内部能力暴露成工具给 AI 
                  │  AnythingLLMMCP   │──▶ AnythingLLM 桌面端 :3001
                  │  PetHospitalMCP   │──▶ PetHospitalServer  :8080 (REST)
                  └──────────────────┘
+
+   浏览器 ────────▶ AnythingLLMWebPage ──▶ AnythingLLM 桌面端 :3001
+                    （上传文档 / 触发嵌入）
 ```
 
 ## 项目一览
@@ -18,6 +21,7 @@ REST 服务，上层包一层 MCP Server，把内部能力暴露成工具给 AI 
 | [`PetHospitalServer/`](PetHospitalServer/) | Go 标准库 | 宠物医院管理系统：REST API + 内嵌网页界面 + 单文件数据库 | `127.0.0.1:8080` |
 | [`PetHospitalMCP/`](PetHospitalMCP/) | Python + `mcp` | 把宠物医院接口包装成 MCP 工具 `list_pets` | `127.0.0.1:8766` |
 | [`AnythingLLMMCP/`](AnythingLLMMCP/) | Python + `mcp` | 把 AnythingLLM 文档列表包装成 MCP 工具 `list_workspace_files` | `127.0.0.1:8765` |
+| [`AnythingLLMWebPage/`](AnythingLLMWebPage/) | 原生 HTML/JS | 单文件网页，向 AnythingLLM 上传文档并触发向量化嵌入 | — |
 
 ---
 
@@ -74,6 +78,22 @@ python server.py
 **工具 `list_workspace_files()`** 无参数，走两步 API：
 `GET /api/v1/workspaces` 取第一个工作区 → `GET /api/v1/workspace/{slug}` 读文档列表。
 只返回文件名、路径、分块数、token 估算等元数据，**不返回正文**，避免撑爆上下文。
+
+## 4. AnythingLLMWebPage
+
+单文件网页工具，用来给 AnythingLLM **喂数据**——而上面三个项目是来读数据的。
+
+直接用浏览器打开 `anythingllm-upload.html` 即可，无需服务器、无需构建、无第三方依赖：
+
+1. 填服务器地址（默认 `http://localhost:3001`）和 API Key
+2. 选择文件，点「上传并嵌入」
+3. 页面会自动取第一个工作区，调用 `/api/v1/document/upload` 上传，
+   然后每 3 秒轮询 `/api/v1/workspace/{slug}` 直到文档出现，最长等 60 秒
+
+API Key 存在浏览器 `localStorage`（键名 `allm_key`），刷新页面不用重输，
+页面底部有「清除 Key」链接可删除。**密钥不会写入任何文件。**
+
+> 上一节排错里的 `fileCount: 0` 就是先用这个页面传一个文档解决的。
 
 ---
 

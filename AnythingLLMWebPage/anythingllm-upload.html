@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>AnythingLLM 文档上传</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; }
+  label { display: block; margin: 12px 0 4px; font-weight: 600; }
+  input[type=text] { width: 100%; padding: 8px; box-sizing: border-box; }
+  input[type=file] { width: 100%; padding: 8px 0; }
+  button { margin-top: 16px; padding: 10px 24px; font-size: 15px; cursor: pointer; }
+  pre { background: #f5f5f5; padding: 12px; border-radius: 6px; white-space: pre-wrap; word-break: break-all; }
+  .ok { color: #0a7d2f; font-weight: 600; }
+  .err { color: #c0392b; font-weight: 600; }
+  .tip { color: #666; font-size: 13px; margin: 6px 0 0; }
+</style>
+</head>
+<body>
+<h2>AnythingLLM 文档上传 + 向量化嵌入</h2>
+<label>服务器地址</label>
+<input type="text" id="base" value="http://localhost:3001">
+<label>API Key</label>
+<input type="text" id="key" placeholder="粘贴 AnythingLLM 的 API Key（不会保存到文件里）">
+<label>选择文件</label>
+<input type="file" id="file">
+<button id="btn">上传并嵌入</button>
+<p class="tip">Key 存在 localStorage，刷新后不用重输。换 Key 请点下面的「清除 Key」。</p>
+<p><a href="#" id="clear">清除 Key</a></p>
+<pre id="out"></pre>
+
+<script>
+const $ = id => document.getElementById(id);
+function setOut(html, cls) { $("out").className = cls || ""; $("out").textContent = ""; $("out").innerHTML = html; }
+
+const saved = localStorage.getItem("allm_key");
+if (saved) $("key").value = saved;
+$("clear").onclick = e => { e.preventDefault(); localStorage.removeItem("allm_key"); $("key").value = ""; setOut("已清除"); };
+
+async function api(path, opts = {}) {
+  const { headers, ...rest } = opts;
+  const res = await fetch($("base").value + "/api" + path, {
+    ...rest,
+    headers: { "Authorization": "Bearer " + $("key").value.trim(), ...(headers || {}) }
+  });
+  return res.json();
+}
+
+function wname(ws) { return ws.name || ws.slug; }
+
+$("btn").onclick = async () => {
+  const file = $("file").files[0];
+  if (!file) return setOut("请先选择文件", "err");
+  const key = $("key").value.trim();
+  if (!key) return setOut("请先填入 API Key", "err");
+  localStorage.setItem("allm_key", key);
+  setOut("正在获取第一个工作区...");
+  try {
+    const wsRes = await api("/v1/workspaces");
+    if (!wsRes.workspaces || !wsRes.workspaces.length) return setOut("没有可用工作区：" + JSON.stringify(wsRes), "err");
+    const ws = wsRes.workspaces[0];
+
+    setOut("上传 <b>" + file.name + "</b> 到工作区 <b>" + wname(ws) + "</b> (" + ws.slug + ") 并触发嵌入...");
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("addToWorkspaces", ws.slug);
+
+    const up = await api("/v1/document/upload", { method: "POST", body: fd, headers: {} });
+    if (!up.success || !up.documents || !up.documents.length) return setOut("上传失败：" + JSON.stringify(up), "err");
+    const doc = up.documents[0];
+
+    setOut("已上传，等待向量化嵌入完成（轮询中）...");
+    const started = Date.now();
+    const t0 = Date.now();
+    while (Date.now() - t0 < 60000) {
+      await new Promise(r => setTimeout(r, 3000));
+      const wr = await api("/v1/workspace/" + ws.slug);
+      const found = wr.workspace && wr.workspace.documents && wr.workspace.documents.some(d => d.docpath === doc.location || d.name === doc.name);
+      if (found) {
+        const sec = ((Date.now() - started) / 1000).toFixed(1);
+        setOut('上传并嵌入完成，耗时 ' + sec + 's<br><br>文件名：' + doc.title + '<br>工作区：' + wname(ws) + '<br>Location：' + doc.location, "ok");
+        return;
+      }
+    }
+    setOut("上传成功但 60s 内未确认嵌入完成。location：" + doc.location, "err");
+  } catch (e) {
+    setOut("请求出错：" + (e.message || e) + "<br><br>请确认服务器地址和 API Key 正确。", "err");
+  }
+};
+</script>
+</body>
+</html>
