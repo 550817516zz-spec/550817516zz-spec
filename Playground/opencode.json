@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "pet-hospital": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8766/mcp",
+      "enabled": true,
+      "oauth": false
+    },
+    "anythingllm": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8765/mcp",
+      "enabled": true,
+      "oauth": false
+    }
+  }
+}

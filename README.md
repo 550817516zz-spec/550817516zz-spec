@@ -22,6 +22,7 @@ REST 服务，上层包一层 MCP Server，把内部能力暴露成工具给 AI 
 | [`PetHospitalMCP/`](PetHospitalMCP/) | Python + `mcp` | 把宠物医院接口包装成 MCP 工具 `list_pets` | `127.0.0.1:8766` |
 | [`AnythingLLMMCP/`](AnythingLLMMCP/) | Python + `mcp` | 把 AnythingLLM 文档列表包装成 MCP 工具 `list_workspace_files` | `127.0.0.1:8765` |
 | [`AnythingLLMWebPage/`](AnythingLLMWebPage/) | 原生 HTML/JS | 单文件网页，向 AnythingLLM 上传文档并触发向量化嵌入 | — |
+| [`Playground/`](Playground/) | JSON | MCP 客户端配置与联调测试场，无业务代码 | — |
 
 ---
 
@@ -99,16 +100,31 @@ API Key 存在浏览器 `localStorage`（键名 `allm_key`），刷新页面不�
 
 ## MCP 配置
 
-两个 MCP Server 都以 Streamable HTTP 暴露，需在客户端配置里注册：
+两个 MCP Server 都以 Streamable HTTP 暴露，客户端按 `remote` 类型注册即可。
+仓库里有一份可直接用的配置：[`Playground/opencode.json`](Playground/opencode.json)
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "pet-hospital":     { "type": "local", "command": ["python", "server.py"], "cwd": "./PetHospitalMCP" },
-    "anythingllm-files":{ "type": "local", "command": ["python", "server.py"], "cwd": "./AnythingLLMMCP" }
+    "pet-hospital": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8766/mcp",
+      "enabled": true,
+      "oauth": false
+    },
+    "anythingllm": {
+      "type": "remote",
+      "url": "http://127.0.0.1:8765/mcp",
+      "enabled": true,
+      "oauth": false
+    }
   }
 }
 ```
+
+用 opencode 打开 `Playground/` 目录，工具会读取上面的配置自动连接。
+完整的启动顺序、免握手自测方法见 [`Playground/README.md`](Playground/README.md)。
 
 两个服务启动时都使用 `stateless_http` + `json_response`：每次请求独立完成，
 **不需要 `initialize` 握手、不保持 SSE 长连接**，同时兼容 2026-07-28 前后的两版 MCP 协议。
