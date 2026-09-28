@@ -1,0 +1,55 @@
+# Python 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+
+# Python 缓存与构建产物
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# 环境变量（保留示例文件）
+.env
+.env.*
+!.env.example
+
+# 日志
+*.log
+*.err
+logs/
+
+# 压缩包与可执行文件
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.exe
+*.dll
+*.pyd
+
+# 依赖锁文件之外的大体积数据
+*.db-journal
+*.sqlite-journal
+*.db-wal
+*.db-shm
+
+# 编辑器 / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
