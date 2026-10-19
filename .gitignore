@@ -36,6 +36,9 @@ logs/
 *.dll
 *.pyd
 
+# Windows release package for PetHospitalServer
+!PetHospitalServer/windows/pethospital.exe
+
 # 依赖锁文件之外的大体积数据
 *.db-journal
 *.sqlite-journal

@@ -1,0 +1,34 @@
+flowchart TD
+    A[用户输入] --> B{解析输入}
+    B --> C[构建消息历史 history]
+    C --> D[调用 OpenAI API（带 tools 参数）]
+    D --> E{检查 tool_calls}
+    E -- 有工具调用 --> F[处理工具调用]
+    F --> G{判断工具类型}
+    G --> H1[isLeapYear（闰年判断）]
+    G --> H2[get_current_working_directory（获取当前工作目录）]
+    G --> H3[list_files_in_directory（列出目录文件）]
+    G --> H4[get_file_type（获取文件类型）]
+    G --> H5[get_file_content（获取文件内容）]
+    G --> H6[create_file（创建文件）]
+    G --> H7[edit_file_content（编辑文件内容）]
+    G --> H8[create_directory（创建目录）]
+    G --> H9[delete_directory（删除目录）]
+    G --> H10[delete_file（删除文件）]
+    H1 --> I[将工具结果加入 history]
+    H2 --> I
+    H3 --> I
+    H4 --> I
+    H5 --> I
+    H6 --> I
+    H7 --> I
+    H8 --> I
+    H9 --> I
+    H10 --> I
+    I --> J[再次调用 OpenAI API（获取最终回复）]
+    J --> K[输出回复（打字机效果）]
+    K --> A
+    E -- 无工具调用 --> K
+    L[load_config（读取 config.ini）] --> D
+    M[OpenAI 客户端（base_url/api_key/model）] --> D
+    N[工具定义 tools 列表] --> D
