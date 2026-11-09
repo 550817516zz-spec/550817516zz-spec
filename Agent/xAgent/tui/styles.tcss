@@ -1,0 +1,291 @@
+/* xAgent 终端界面样式 - 类似截图布局 */
+
+Screen {
+    background: $surface;
+    layout: vertical;
+}
+
+.topbar {
+    height: 1;
+    background: $panel;
+    layout: horizontal;
+}
+
+.topbar-left {
+    width: 1fr;
+    padding: 0 1;
+}
+
+.topbar-mid {
+    width: 1fr;
+    content-align: center middle;
+    color: $text-muted;
+}
+
+.topbar-right {
+    width: 1fr;
+    content-align: right middle;
+    padding: 0 1;
+    color: $text-muted;
+}
+
+.infobar {
+    height: auto;
+    margin: 1 2 0 2;
+    padding: 0 1;
+    border: tall $accent;
+    background: $panel;
+}
+
+.infobar-row {
+    height: auto;
+}
+
+.infobar-context {
+    text-style: bold;
+}
+
+.infobar-keys {
+    color: $text-muted;
+}
+
+#main-row {
+    height: 1fr;
+}
+
+#chat-col {
+    width: 1fr;
+    layout: vertical;
+}
+
+#messages {
+    height: 1fr;
+    padding: 1 2;
+    scrollbar-size-vertical: 1;
+}
+
+#sidebar {
+    width: 36;
+    border-left: solid $panel;
+    background: $surface;
+}
+
+.sidebar-title {
+    height: 1;
+    padding: 0 1;
+    background: $panel;
+    text-style: bold;
+}
+
+.sidebar-section {
+    height: auto;
+}
+
+.sidebar-row {
+    height: auto;
+    padding: 0 1;
+}
+
+.sidebar-subtitle {
+    height: 1;
+    padding: 0 1;
+}
+
+.sidebar-tool {
+    height: auto;
+    padding: 0 1;
+}
+
+#tools-section {
+    height: 1fr;
+    padding: 0 0 1 0;
+}
+
+.message {
+    height: auto;
+    margin: 0 0 1 0;
+    padding: 0 0 0 1;
+    border-left: tall $primary;
+}
+
+.message-user {
+    border-left: tall $warning;
+}
+
+.message-assistant {
+    border-left: tall $primary;
+}
+
+.message-tool {
+    border-left: tall $success;
+}
+
+.message-error {
+    border-left: tall $error;
+}
+
+.message-system {
+    border-left: tall $secondary;
+}
+
+.message-label {
+    height: auto;
+    text-style: bold;
+}
+
+.toolcard {
+    height: auto;
+    margin: 0 0 1 2;
+    padding: 0 0 0 1;
+    border-left: tall $success;
+    border: round $success;
+}
+
+.toolcard-header {
+    height: auto;
+    text-style: bold;
+}
+
+.toolcard-section-label {
+    height: auto;
+    color: $text-muted;
+}
+
+.toolcard-params {
+    height: auto;
+    margin: 0 0 0 2;
+    padding: 0 1;
+    border: round $success-darken-1;
+}
+
+.toolcard-result {
+    height: auto;
+    margin: 0 0 0 2;
+}
+
+#command-input {
+    height: auto;
+    min-height: 3;
+    max-height: 10;
+    margin: 0 2 1 2;
+    border: tall $primary;
+    padding: 0 1;
+    scrollbar-size-vertical: 1;
+}
+
+.bottombar {
+    height: 1;
+    background: $panel;
+    layout: horizontal;
+}
+
+.bottombar-status {
+    width: auto;
+    padding: 0 1;
+}
+
+.bottombar-info {
+    width: 1fr;
+    padding: 0 1;
+    color: $text-muted;
+}
+
+.bottombar-keys {
+    width: auto;
+    padding: 0 1;
+    color: $text-muted;
+}
+
+.bottombar-palette {
+    width: auto;
+    padding: 0 1;
+    color: $text-muted;
+}
+
+HelpModal {
+    align: center middle;
+}
+
+.compaction-dialog {
+    width: 92%;
+    height: 85%;
+    border: tall $accent;
+    background: $surface;
+    padding: 1 2;
+}
+
+.compaction-title {
+    height: 1;
+    text-style: bold;
+    content-align: center middle;
+}
+
+.compaction-meta {
+    height: 1;
+    color: $text-muted;
+    content-align: center middle;
+}
+
+.compaction-body {
+    height: 1fr;
+    margin: 1 0;
+}
+
+.compaction-column {
+    width: 1fr;
+    height: 100%;
+    border: round $primary;
+    padding: 0 1;
+}
+
+.compaction-column-title {
+    height: 1;
+    text-style: bold;
+    color: $accent;
+}
+
+.compaction-scroll {
+    height: 1fr;
+}
+
+.compaction-text {
+    height: auto;
+    width: 100%;
+}
+
+.compaction-footer {
+    height: 3;
+    align: center middle;
+}
+
+#close-compaction {
+    width: 16;
+}
+
+.help-dialog {
+    width: 60;
+    height: auto;
+    max-height: 80%;
+    border: tall $primary;
+    background: $surface;
+    padding: 1 2;
+}
+
+.help-title {
+    text-style: bold;
+    content-align: center middle;
+}
+
+.help-section-title {
+    color: $accent;
+    text-style: bold;
+    margin: 1 0 0 0;
+}
+
+.help-text {
+    height: auto;
+}
+
+.help-cmd {
+    height: auto;
+}

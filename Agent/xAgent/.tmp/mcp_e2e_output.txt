@@ -1,0 +1,13 @@
+MCP status: MCP Server「Bazi-MCP」已连接，发现 3 个工具。
+
+MCP errors: []
+
+tool names: web_search, searchWeb, getBaziDetail, getSolarTimes, getChineseCalendar
+
+TOOL CALL getChineseCalendar {'solarDatetime': '2026-11-02T12:00:00+08:00'}
+
+TOOL RESULT ok=True {"公历":"2026年11月2日 星期一","农历":"农历丙午年九月廿四","干支":"丙午 戊戌 庚辰","生肖":"马","纳音":"白蜡金","节气":"霜降","二十八宿":"毕月乌吉","彭祖百忌":"庚不经络织机虚张 辰不哭泣必主重丧","喜神方位":"西北","阳贵神方位":"南","阴贵神方位":"东北","福神方位":"西南","财神方位":"东","冲煞":"冲狗(戌)煞南","宜":"祭祀,沐浴,解除,破屋,坏垣,馀事勿取","忌":"开市,嫁娶"}
+
+ASSISTANT: 2026年11月2日（星期一）对应农历丙午年九月廿四，生肖马，干支为丙午 戊戌 庚辰，节气霜降，冲狗煞南，宜祭祀、沐浴、解除等，忌开市、嫁娶。
+
+DONE

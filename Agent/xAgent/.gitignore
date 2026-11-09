@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+config.ini
+xagent.ini
+.env
+.mcp.json
+.textual/
+.agents/context/
+.agents/logs/

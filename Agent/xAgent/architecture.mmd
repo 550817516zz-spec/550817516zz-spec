@@ -1,0 +1,68 @@
+flowchart TD
+    subgraph FRONT["前端层（可替换，可并行演进）"]
+        TUI["tui/ · Textual 终端界面"]
+        WEB["web/ · 预留"]
+        DESK["desktop/ · 预留"]
+        MOB["mobile/ · 预留"]
+    end
+
+    subgraph CORE["core/ · 与界面无关的业务内核"]
+        BOOT["bootstrap.py<br/>装配根"]
+        ENGINE["agent/engine.py<br/>Agent 引擎（ReAct 循环）"]
+        EVENTS["agent/events.py<br/>事件协议"]
+        SESSION["agent/session.py<br/>会话与消息历史"]
+        CTX["context/*<br/>Token 监控 / 归档 / 压缩 / recallContext"]
+        TOOLBASE["tools/base.py<br/>工具抽象 + Schema 推导"]
+        REGISTRY["tools/registry.py<br/>工具注册表"]
+        BUILTIN["tools/builtin/*<br/>内置工具实现"]
+        MCP["mcp/*<br/>MCP Client（Streamable HTTP）"]
+        WS["workspace.py<br/>文件沙箱"]
+        CLIENT["llm/base.py<br/>模型客户端接口"]
+        OAIC["llm/openai_client.py<br/>OpenAI 兼容实现"]
+        CFG["config/settings.py<br/>配置装载"]
+        MODELS["models/messages.py<br/>领域模型"]
+        EXC["exceptions.py<br/>统一异常"]
+    end
+
+    subgraph OUT["外部资源"]
+        API["OpenAI 兼容 API"]
+        FS["本地文件系统"]
+        MCPSERVER["外部 MCP Server"]
+        MCPCONF[".mcp.json"]
+    end
+
+    TUI -->|"消费 AgentEvent 事件流"| ENGINE
+    WEB -.->|"同一套事件流"| ENGINE
+    DESK -.->|"同一套事件流"| ENGINE
+    MOB -.->|"同一套事件流"| ENGINE
+
+    BOOT --> ENGINE
+    BOOT --> OAIC
+    BOOT --> REGISTRY
+    BOOT --> CFG
+
+    ENGINE --> EVENTS
+    ENGINE --> SESSION
+    ENGINE --> CLIENT
+    ENGINE --> REGISTRY
+    ENGINE --> EXC
+    ENGINE --> CTX
+
+    CTX --> SESSION
+    CTX --> MODELS
+    CTX --> FS
+    BUILTIN --> CTX
+
+    CLIENT --> OAIC
+    OAIC --> API
+
+    REGISTRY --> TOOLBASE
+    REGISTRY --> BUILTIN
+    REGISTRY --> MCP
+    MCP --> MCPCONF
+    MCP --> MCPSERVER
+    BUILTIN --> WS
+    BUILTIN --> FS
+
+    SESSION --> MODELS
+    OAIC --> MODELS
